@@ -57,7 +57,7 @@ static uint32_t ultrasonic_calc_distance(void)
 	
 	/* Start 10us counting timer */
 	timx_finished_counting = FALSE;
-	//tim3_start();
+	timx_start();
 	
 	/* Set trigger pin to 0 until 15us has been counted */
 	while (trig_up_time != TRIGGER_UP_TIME_US)
