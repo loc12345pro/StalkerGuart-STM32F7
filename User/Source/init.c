@@ -140,7 +140,7 @@ void assert_failed(uint8_t* file, uint32_t line)
   }
 }
 
-void system_init()
+void system_init(void)
 {
 	/* This project template calls firstly two functions in order to configure MPU feature 
     and to enable the CPU Cache, respectively MPU_Config() and CPU_CACHE_Enable().
@@ -166,7 +166,7 @@ void system_init()
 	SystemClock_Config();
 }
 
-void lcd_init()
+void lcd_init(void)
 {
 	/* LCD Initialization */ 
   BSP_LCD_Init();
@@ -196,11 +196,11 @@ void lcd_init()
   BSP_LCD_SetTransparency(1, 100);
 }
 
-void tim3_init()
+void tim3_init(void)
 {
-	/* Initialize 10us timer */
+	/* Initialize 1us timer */
 	tim3Handle.Instance = TIM3;
-  tim3Handle.Init.Period            = 10;
+  tim3Handle.Init.Period            = 1;
   tim3Handle.Init.Prescaler         = (uint32_t)((SystemCoreClock / 2) / 1000000) - 1;
   tim3Handle.Init.ClockDivision     = 0;
   tim3Handle.Init.CounterMode       = TIM_COUNTERMODE_UP;
@@ -217,28 +217,7 @@ void tim3_init()
 	tim3_stop();
 }
 
-void tim4_init()
-{
-	/* Initialize 1ms timer */
-	tim4Handle.Instance = TIM4;
-  tim4Handle.Init.Period            = 10;
-  tim4Handle.Init.Prescaler         = (uint32_t)((SystemCoreClock / 2) / 10000) - 1;
-  tim4Handle.Init.ClockDivision     = 0;
-  tim4Handle.Init.CounterMode       = TIM_COUNTERMODE_UP;
-  tim4Handle.Init.RepetitionCounter = 0;
-  tim4Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-
-	if (HAL_TIM_Base_Init(&tim4Handle) != HAL_OK)
-  {
-    /* Initialization Error */
-    Error_Handler();
-  }
-
-	/* Stop timer */
-	tim4_stop();
-}
-
-void tim3_start()
+void tim3_start(void)
 {
 	/* Start Channel1 */
 	time3_is_counting = FALSE;
@@ -249,33 +228,11 @@ void tim3_start()
   }
 }
 
-void tim3_stop()
+void tim3_stop(void)
 {
 	/* Stop Channel1 */
 	time3_is_counting = FALSE;
   if (HAL_TIM_Base_Stop_IT(&tim3Handle) != HAL_OK)
-  {
-    /* Starting Error */
-    Error_Handler();
-  }
-}
-
-void tim4_start()
-{
-	/* Start Channel1 */
-	time4_is_counting = FALSE;
-  if (HAL_TIM_Base_Start_IT(&tim4Handle) != HAL_OK)
-  {
-    /* Starting Error */
-    Error_Handler();
-  }
-}
-
-void tim4_stop()
-{
-	/* Stop Channel1 */
-	time4_is_counting = FALSE;
-  if (HAL_TIM_Base_Stop_IT(&tim4Handle) != HAL_OK)
   {
     /* Starting Error */
     Error_Handler();

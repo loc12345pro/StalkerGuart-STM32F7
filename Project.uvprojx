@@ -415,19 +415,14 @@
               <FilePath>.\User\Source\stm32f7xx_it.c</FilePath>
             </File>
             <File>
-              <FileName>init.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\Source\init.c</FilePath>
-            </File>
-            <File>
               <FileName>ultrasonic.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\Source\ultrasonic.c</FilePath>
             </File>
             <File>
-              <FileName>ultrasonic.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\User\Include\ultrasonic.h</FilePath>
+              <FileName>init.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\Source\init.c</FilePath>
             </File>
           </Files>
         </Group>

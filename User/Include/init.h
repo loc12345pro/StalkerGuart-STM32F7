@@ -8,9 +8,7 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef tim3Handle;
-extern TIM_HandleTypeDef tim4Handle;
 extern uint8_t tim3_finished_counting;
-extern uint8_t tim4_finished_counting;
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
@@ -23,14 +21,11 @@ void Error_Handler(void);
 void MPU_Config(void);
 void CPU_CACHE_Enable(void);
 
-void system_init();
-void lcd_init();
-void tim3_init();
-void tim3_start();
-void tim3_stop();
+void system_init(void);
+void lcd_init(void);
 
-void tim4_init();
-void tim4_start();
-void tim4_stop();
+void tim3_init(void);
+void tim3_start(void);
+void tim3_stop(void);
 
 #endif

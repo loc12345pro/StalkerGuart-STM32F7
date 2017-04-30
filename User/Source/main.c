@@ -38,6 +38,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "init.h"
 #include "stm32746g_discovery_lcd.h"
+#include "ultrasonic.h"
 
 /** @addtogroup STM32F7xx_HAL_Examples
  * @{
@@ -50,11 +51,11 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
+#define MAX_STR 100
+
 /* TIM handle declaration */
 TIM_HandleTypeDef tim3Handle;
-TIM_HandleTypeDef tim4Handle;
 uint8_t tim3_finished_counting = FALSE;
-uint8_t tim4_finished_counting = FALSE;
 
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -67,6 +68,10 @@ uint8_t tim4_finished_counting = FALSE;
  */
 int main(void)
 {
+	/* Preparations */
+	uint8_t str[MAX_STR];
+	float range_cm = 0.0f;
+	
 	/* System initialization */
 	system_init();
 	
@@ -80,12 +85,19 @@ int main(void)
 	/* Timer 3 */
 	tim3_init();
 	
-	/* Timer 4 */
-	tim4_init();
+	/* Ultrasonic initialization */
+	ultrasonic_init();
 	
 	/* Infinite loop */
 	while (1)
 	{
+		/* Calculate distance in cemtimeters */
+		range_cm = ultrasonic_calc_distance_cm();
+		if (range_cm == 20)
+		{
+			sprintf((char*)str, "Distance: %.2f (cm)", range_cm);
+			BSP_LCD_DisplayStringAtLine(0, str);
+		}
 	}
 }
 

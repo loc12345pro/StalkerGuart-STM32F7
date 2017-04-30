@@ -195,7 +195,7 @@ void TIM3_IRQHandler(void)
   */
 void TIM4_IRQHandler(void)
 {
-  HAL_TIM_IRQHandler(&tim4Handle);
+  /* Do nothing */
 }
 
 /**
@@ -206,15 +206,7 @@ void TIM4_IRQHandler(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   BSP_LED_Toggle(LED1);
-	
-	if (htim->Instance == TIM3)
-	{
-		tim3_finished_counting = TRUE;
-	}
-	else if (htim->Instance == TIM4)
-	{
-		tim4_finished_counting = TRUE;
-	}
+	tim3_finished_counting = TRUE;
 }
 /**
   * @}
