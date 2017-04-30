@@ -15,10 +15,10 @@ static void ultrasonic_init_trig(void)
 {
 	GPIO_InitTypeDef  gpio_init_structure;
 
-  /* Enable the GPIO_LED clock */
+  /* Enable the GPIOI clock */
   __HAL_RCC_GPIOI_CLK_ENABLE();
 
-  /* Configure the GPIO_LED pin */
+  /* Configure the trigger pin */
   gpio_init_structure.Pin = TRIGGER_PIN;
   gpio_init_structure.Mode = GPIO_MODE_OUTPUT_PP;
   gpio_init_structure.Pull = GPIO_PULLDOWN;
@@ -26,7 +26,7 @@ static void ultrasonic_init_trig(void)
   
   HAL_GPIO_Init(TRIGGER_PORT, &gpio_init_structure);
     
-  /* By default, turn off LED */
+  /* By default, set pin to 0 */
   HAL_GPIO_WritePin(GPIOI, TRIGGER_PIN, GPIO_PIN_RESET);
 }
 
@@ -34,19 +34,16 @@ static void ultrasonic_init_echo(void)
 {
 	GPIO_InitTypeDef  gpio_init_structure;
 
-  /* Enable the GPIO_LED clock */
+  /* Enable the GPIOI clock */
   __HAL_RCC_GPIOI_CLK_ENABLE();
 
-  /* Configure the GPIO_LED pin */
+  /* Configure the GPIO echo pin */
   gpio_init_structure.Pin = ECHO_PIN;
   gpio_init_structure.Mode = GPIO_MODE_INPUT;
   gpio_init_structure.Pull = GPIO_PULLDOWN;
   gpio_init_structure.Speed = GPIO_SPEED_HIGH;
   
   HAL_GPIO_Init(ECHO_PORT, &gpio_init_structure);
-    
-  /* By default, turn off LED */
-  HAL_GPIO_WritePin(GPIOI, ECHO_PIN, GPIO_PIN_RESET);
 }
 
 static uint32_t ultrasonic_calc_distance(void)
@@ -59,18 +56,18 @@ static uint32_t ultrasonic_calc_distance(void)
 	HAL_GPIO_WritePin(GPIOI, TRIGGER_PIN, GPIO_PIN_SET);
 	
 	/* Start 10us counting timer */
-	tim3_finished_counting = FALSE;
-	tim3_start();
+	timx_finished_counting = FALSE;
+	//tim3_start();
 	
 	/* Set trigger pin to 0 until 15us has been counted */
 	while (trig_up_time != TRIGGER_UP_TIME_US)
 	{
-		if (tim3_finished_counting == TRUE)
+		if (timx_finished_counting == TRUE)
 		{
 			trig_up_time++;
 			
 			/* Reset timer counting flag */
-			tim3_finished_counting = FALSE;
+			timx_finished_counting = FALSE;
 		}
 	}
 	
@@ -80,17 +77,17 @@ static uint32_t ultrasonic_calc_distance(void)
 	/* Count time until echo pin is set to 1 */
 	while (HAL_GPIO_ReadPin(GPIOI, ECHO_PIN) != GPIO_PIN_SET)
 	{
-		if (tim3_finished_counting != TRUE)
+		if (timx_finished_counting != TRUE)
 		{
 			ms_time_passed++;
 			
 			/* Reset timer counting flag */
-			tim3_finished_counting = FALSE;
+			timx_finished_counting = FALSE;
 		}
 	}
 	
 	/* Stop 1ms timer */
-	tim3_stop();
+	timx_stop();
 	
 	return ms_time_passed;
 }

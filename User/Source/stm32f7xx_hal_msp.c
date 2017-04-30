@@ -1,21 +1,10 @@
 /**
   ******************************************************************************
-  * @file    stm32f7xx_hal_msp.c
+  * @file    TIM/TIM_TimeBase/Src/stm32f7xx_hal_msp.c
   * @author  MCD Application Team
-  * @version V1.0.3
-  * @date    22-April-2016 
+  * @version V1.1.0
+  * @date    30-December-2016 
   * @brief   HAL MSP module.
-  *          This file template is located in the HAL folder and should be copied 
-  *          to the user folder.
-  *         
-  @verbatim
- ===============================================================================
-                     ##### How to use this driver #####
- ===============================================================================
-    [..]
-
-
-  @endverbatim
   ******************************************************************************
   * @attention
   *
@@ -44,12 +33,12 @@
   * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f7xx_hal.h"
+#include "init.h"
 
-/** @addtogroup STM32F7xx_HAL_Driver
+/** @addtogroup STM32F7xx_HAL_Examples
   * @{
   */
 
@@ -69,27 +58,28 @@
   * @{
   */
 
-/**
-  * @brief  Initializes the Global MSP.
-  * @param  None
-  * @retval None
-  */
-void HAL_MspInit(void)
-{
-
-}
 
 /**
-  * @brief  DeInitializes the Global MSP.
-  * @param  None  
+  * @brief TIM MSP Initialization
+  *        This function configures the hardware resources used in this example:
+  *           - Peripheral's clock enable
+  * @param htim: TIM handle pointer
   * @retval None
   */
-void HAL_MspDeInit(void)
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef *htim)
 {
-  /* NOTE : This function is generated automatically by STM32CubeMX and eventually  
-            modified by the user
-   */
+  /*##-1- Enable peripheral clock #################################*/
+  /* TIMx Peripheral clock enable */
+  TIMx_CLK_ENABLE();
+  
+  /*##-2- Configure the NVIC for TIMx ########################################*/
+  /* Set the TIMx priority */
+  HAL_NVIC_SetPriority(TIMx_IRQn, 3, 0);
+
+  /* Enable the TIMx global Interrupt */
+  HAL_NVIC_EnableIRQ(TIMx_IRQn);
 }
+
 
 /**
   * @}

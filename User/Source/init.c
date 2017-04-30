@@ -1,4 +1,6 @@
 #include "init.h"
+#include "stm32746g_discovery.h"
+#include "stm32746g_discovery_lcd.h"
 
 /**
   * @brief  System Clock Configuration
@@ -120,26 +122,6 @@ void CPU_CACHE_Enable(void)
   SCB_EnableDCache();
 }
 
-#ifdef  USE_FULL_ASSERT
-
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-
-  /* Infinite loop */
-  while (1)
-  {
-  }
-}
-
 void system_init(void)
 {
 	/* This project template calls firstly two functions in order to configure MPU feature 
@@ -196,46 +178,66 @@ void lcd_init(void)
   BSP_LCD_SetTransparency(1, 100);
 }
 
-void tim3_init(void)
+void timx_init(void)
 {
 	/* Initialize 1us timer */
-	tim3Handle.Instance = TIM3;
-  tim3Handle.Init.Period            = 1;
-  tim3Handle.Init.Prescaler         = (uint32_t)((SystemCoreClock / 2) / 1000000) - 1;
-  tim3Handle.Init.ClockDivision     = 0;
-  tim3Handle.Init.CounterMode       = TIM_COUNTERMODE_UP;
-  tim3Handle.Init.RepetitionCounter = 0;
-  tim3Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+	timxHandle.Instance = TIMx;
+  timxHandle.Init.Period            = 1;
+  timxHandle.Init.Prescaler         = (uint32_t)((SystemCoreClock / 2) / 1000000) - 1;
+  timxHandle.Init.ClockDivision     = 0;
+  timxHandle.Init.CounterMode       = TIM_COUNTERMODE_UP;
+  timxHandle.Init.RepetitionCounter = 0;
+  timxHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
-	if (HAL_TIM_Base_Init(&tim3Handle) != HAL_OK)
+	if (HAL_TIM_Base_Init(&timxHandle) != HAL_OK)
   {
     /* Initialization Error */
     Error_Handler();
   }
 
 	/* Stop timer */
-	tim3_stop();
+	timx_stop();
 }
 
-void tim3_start(void)
+void timx_start(void)
 {
 	/* Start Channel1 */
-	time3_is_counting = FALSE;
-  if (HAL_TIM_Base_Start_IT(&tim3Handle) != HAL_OK)
+	timx_finished_counting = FALSE;
+  if (HAL_TIM_Base_Start_IT(&timxHandle) != HAL_OK)
   {
     /* Starting Error */
     Error_Handler();
   }
 }
 
-void tim3_stop(void)
+void timx_stop(void)
 {
 	/* Stop Channel1 */
-	time3_is_counting = FALSE;
-  if (HAL_TIM_Base_Stop_IT(&tim3Handle) != HAL_OK)
+	timx_finished_counting = FALSE;
+  if (HAL_TIM_Base_Stop_IT(&timxHandle) != HAL_OK)
   {
     /* Starting Error */
     Error_Handler();
+  }
+}
+
+#ifdef  USE_FULL_ASSERT
+
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t* file, uint32_t line)
+{ 
+  /* User can add his own implementation to report the file name and line number,
+     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+
+  /* Infinite loop */
+  while (1)
+  {
   }
 }
 

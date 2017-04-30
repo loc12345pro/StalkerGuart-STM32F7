@@ -39,7 +39,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f7xx_it.h"
-#include "stm32f7xx_hal.h"
+#include "stm32746g_discovery.h"
 #include "init.h"
 
 /** @addtogroup STM32F7xx_HAL_Examples
@@ -182,20 +182,9 @@ void SysTick_Handler(void)
 
   * @retval None
   */
-void TIM3_IRQHandler(void)
+void TIMx_IRQHandler(void)
 {
-  HAL_TIM_IRQHandler(&tim3Handle);
-}
-
-/**
-  * @brief  This function handles TIM interrupt request.
-  * @param  None
-
-  * @retval None
-  */
-void TIM4_IRQHandler(void)
-{
-  /* Do nothing */
+  HAL_TIM_IRQHandler(&timxHandle);
 }
 
 /**
@@ -206,7 +195,7 @@ void TIM4_IRQHandler(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   BSP_LED_Toggle(LED1);
-	tim3_finished_counting = TRUE;
+	timx_finished_counting = TRUE;
 }
 /**
   * @}

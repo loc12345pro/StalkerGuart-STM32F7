@@ -54,8 +54,8 @@
 #define MAX_STR 100
 
 /* TIM handle declaration */
-TIM_HandleTypeDef tim3Handle;
-uint8_t tim3_finished_counting = FALSE;
+TIM_HandleTypeDef timxHandle;
+volatile uint8_t timx_finished_counting = FALSE;
 
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -83,7 +83,7 @@ int main(void)
 	lcd_init();
 	
 	/* Timer 3 */
-	tim3_init();
+	timx_init();
 	
 	/* Ultrasonic initialization */
 	ultrasonic_init();
