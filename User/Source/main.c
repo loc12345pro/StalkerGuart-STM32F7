@@ -39,6 +39,7 @@
 #include "init.h"
 #include "stm32746g_discovery_lcd.h"
 #include "ultrasonic.h"
+#include "delay.h"
 
 /** @addtogroup STM32F7xx_HAL_Examples
  * @{
@@ -93,11 +94,21 @@ int main(void)
 	{
 		/* Calculate distance in cemtimeters */
 		range_cm = ultrasonic_calc_distance_cm();
-		if (range_cm == 20)
+		if (range_cm == 0)
+		{
+			BSP_LCD_DisplayStringAtLine(0, (uint8_t*)"Can't detect range...");
+		}
+		else 
 		{
 			sprintf((char*)str, "Distance: %.2f (cm)", range_cm);
 			BSP_LCD_DisplayStringAtLine(0, str);
 		}
+		
+		/* Display the result for a mount of time */
+		delay(200000);
+		
+		/* Clear LCD */
+		BSP_LCD_ClearStringLine(0);
 	}
 }
 

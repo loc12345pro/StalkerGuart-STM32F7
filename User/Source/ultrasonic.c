@@ -1,6 +1,7 @@
 #include "ultrasonic.h"
 #include <stdio.h>
 #include "init.h"
+#include "delay.h"
 
 void ultrasonic_init(void)
 {
@@ -49,47 +50,23 @@ static void ultrasonic_init_echo(void)
 static uint32_t ultrasonic_calc_distance(void)
 {
 	/* Preparations */
-	uint32_t ms_time_passed = 0;
-	uint8_t trig_up_time = 0;
+	uint32_t us_time_passed = 0;
 	
-	/* Enable trigger pin in at least 10us */
+	/* Make sure disable trigger pin */
+	HAL_GPIO_WritePin(GPIOI, TRIGGER_PIN, GPIO_PIN_RESET);
+	delay(2);
+	
+	/* Enable trigger pin in 15us (at least 10us) */
 	HAL_GPIO_WritePin(GPIOI, TRIGGER_PIN, GPIO_PIN_SET);
+	delay(15);
 	
-	/* Start 10us counting timer */
-	timx_finished_counting = FALSE;
-	timx_start();
-	
-	/* Set trigger pin to 0 until 15us has been counted */
-	while (trig_up_time != TRIGGER_UP_TIME_US)
-	{
-		if (timx_finished_counting == TRUE)
-		{
-			trig_up_time++;
-			
-			/* Reset timer counting flag */
-			timx_finished_counting = FALSE;
-		}
-	}
-	
+	/* Disable the trigger pin */
 	HAL_GPIO_WritePin(GPIOI, TRIGGER_PIN, GPIO_PIN_RESET);
 
-	/* Start to count time in miliseconds */
-	/* Count time until echo pin is set to 1 */
-	while (HAL_GPIO_ReadPin(GPIOI, ECHO_PIN) != GPIO_PIN_SET)
-	{
-		if (timx_finished_counting != TRUE)
-		{
-			ms_time_passed++;
-			
-			/* Reset timer counting flag */
-			timx_finished_counting = FALSE;
-		}
-	}
-	
-	/* Stop 1ms timer */
-	timx_stop();
-	
-	return ms_time_passed;
+	/* Calculate pulse-width between SET state and RESET state of echo pin */
+	us_time_passed = pulse_in(GPIOI, ECHO_PIN, GPIO_PIN_SET);
+
+	return us_time_passed;
 }
 
 float ultrasonic_calc_distance_inch(void)
